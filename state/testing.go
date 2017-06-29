@@ -74,12 +74,12 @@ func TestState(t *testing.T, s interface{}) {
 	}
 
 	// If we can write and persist then verify that the serial
-	// is only implemented on change.
+	// is only incremented on change.
 	writer, writeOk := s.(StateWriter)
 	persister, persistOk := s.(StatePersister)
 	if writeOk && persistOk {
 		// Same serial
-		serial := current.Serial
+		serial := reader.State().Serial
 		if err := writer.WriteState(current); err != nil {
 			t.Fatalf("err: %s", err)
 		}
@@ -88,7 +88,7 @@ func TestState(t *testing.T, s interface{}) {
 		}
 
 		if reader.State().Serial != serial {
-			t.Fatalf("bad: expected %d, got %d", serial, reader.State().Serial)
+			t.Fatalf("serial changed after persisting with no changes: got %d, want %d", reader.State().Serial, serial)
 		}
 
 		// Change the serial
@@ -113,7 +113,7 @@ func TestState(t *testing.T, s interface{}) {
 		}
 
 		if reader.State().Serial <= serial {
-			t.Fatalf("bad: expected %d, got %d", serial, reader.State().Serial)
+			t.Fatalf("serial incorrect after persisting with changes: got %d, want > %d", reader.State().Serial, serial)
 		}
 
 		// Check that State() returns a copy by modifying the copy and comparing
