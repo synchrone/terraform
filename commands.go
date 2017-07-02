@@ -260,6 +260,11 @@ func init() {
 				Meta: meta,
 			}, nil
 		},
+		"internal-dump plan": func() (cli.Command, error) {
+			return &command.DumpPlanCommand{
+				Meta: meta,
+			}, nil
+		},
 	}
 }
 
