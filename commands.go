@@ -255,6 +255,11 @@ func init() {
 				Meta: meta,
 			}, nil
 		},
+		"internal-dump config": func() (cli.Command, error) {
+			return &command.DumpConfigCommand{
+				Meta: meta,
+			}, nil
+		},
 	}
 }
 
